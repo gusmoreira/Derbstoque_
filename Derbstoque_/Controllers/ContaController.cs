@@ -18,6 +18,7 @@ namespace Derbstoque_.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public ActionResult Login(LoginViewModel login, string returnUrl)
         {
             if (!ModelState.IsValid)
@@ -25,24 +26,23 @@ namespace Derbstoque_.Controllers
                 return View(login);
             }
 
-            var achou = UsuarioModel.ValidarUsuario(login.Usuario, login.Senha);
+            var usuario = UsuarioModel.ValidarUsuario(login.Usuario, login.Senha);
 
-            if (achou)
+            if (usuario != null)
             {
-                FormsAuthentication.SetAuthCookie(login.Usuario, login.LembrarMe);
-
+                FormsAuthentication.SetAuthCookie(usuario.Nome, login.LembrarMe);
                 if (Url.IsLocalUrl(returnUrl))
                 {
                     return Redirect(returnUrl);
                 }
                 else
                 {
-                    RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Home");
                 }
             }
             else
             {
-                ModelState.AddModelError("", "Login Inválido.");
+                ModelState.AddModelError("", "Login inválido.");
             }
 
             return View(login);
@@ -53,7 +53,7 @@ namespace Derbstoque_.Controllers
         public ActionResult LogOff()
         {
             FormsAuthentication.SignOut();
-            return RedirectToAction("Index,Home");
+            return RedirectToAction("Index", "Home");
         }
     }
 }

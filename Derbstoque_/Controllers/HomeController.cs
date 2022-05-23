@@ -13,7 +13,7 @@ namespace Derbstoque_.Controllers
             return View();
         }
 
-        public ActionResult About()
+        public ActionResult Sobre()
         {
 
             return View();
